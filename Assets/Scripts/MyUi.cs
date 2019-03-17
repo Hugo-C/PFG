@@ -7,10 +7,12 @@ public class MyUi : MonoBehaviour {
     public Slider chanceTreeGrowingSlider;
     public Slider chanceTreeBurningSlider;
     public Slider secondsBetweenStepsSlider;
+    public Slider cameraSpeedSlider;
     public GameObject panel;  // used to hide the UI
     public GameObject tip;
 
     private Board board;
+    private MyCamera myCamera;
 
     public int Step {
         set => myStepText.text = "Steps : " + value;
@@ -20,9 +22,11 @@ public class MyUi : MonoBehaviour {
         panel.SetActive(false);
         tip.SetActive(true);
         board = GameObject.Find("Board").GetComponent<Board>();
+        myCamera = GameObject.Find("Main Camera").GetComponent<MyCamera>();
         chanceTreeGrowingSlider.value = board.chanceTreeGrowing;
         chanceTreeBurningSlider.value = board.chanceTreeBurning;
         secondsBetweenStepsSlider.value = board.secondsBetweenSteps;
+        cameraSpeedSlider.value = myCamera.speed;
     }
 
     private void Update() {
@@ -34,15 +38,19 @@ public class MyUi : MonoBehaviour {
         }
     }
 
-    public void OnChanceTreeGrowing(float chance) {
+    public void OnChanceTreeGrowingChange(float chance) {
         board.chanceTreeGrowing = chance;
     }
     
-    public void OnChanceTreeBurning(float chance) {
+    public void OnChanceTreeBurningChange(float chance) {
         board.chanceTreeBurning = chance;
     }
     
-    public void OnsecondsBetweenSteps(float seconds) {
+    public void OnsecondsBetweenStepsChange(float seconds) {
         board.secondsBetweenSteps = seconds;
+    }
+    
+    public void OnCameraSpeedChange(float speed) {
+        myCamera.speed = speed;
     }
 }
