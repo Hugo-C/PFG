@@ -8,6 +8,7 @@ public class MyUi : MonoBehaviour {
     public Slider chanceTreeBurningSlider;
     public Slider secondsBetweenStepsSlider;
     public GameObject panel;  // used to hide the UI
+    public GameObject tip;
 
     private Board board;
 
@@ -17,6 +18,7 @@ public class MyUi : MonoBehaviour {
 
     private void Start() {
         panel.SetActive(false);
+        tip.SetActive(true);
         board = GameObject.Find("Board").GetComponent<Board>();
         chanceTreeGrowingSlider.value = board.chanceTreeGrowing;
         chanceTreeBurningSlider.value = board.chanceTreeBurning;
@@ -26,6 +28,9 @@ public class MyUi : MonoBehaviour {
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             panel.SetActive(!panel.activeSelf);  // toggle panel active/hide
+            tip.SetActive(!panel.activeSelf);  // toggle panel active/hide
+        } else if (Input.GetKeyDown(KeyCode.Escape)) {
+            Application.Quit();
         }
     }
 
