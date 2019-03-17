@@ -12,7 +12,17 @@ ModelImporter:
     2300000: ground_dirt
     3300000: ground_dirt
     4300000: ground_dirt
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natureKit-leavesGreen
+    second: {fileID: 2100000, guid: a1714d67049c7194984d9090fc0a7d60, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natureKit-wood
+    second: {fileID: 2100000, guid: 8ccbbaa7ae0129b42abd57bd169e23bf, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

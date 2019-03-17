@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100002, guid: 0614fb8391028f843a50af73ef8fa369, type: 3}
       propertyPath: m_Name
-      value: tree_short_fall
+      value: tree_short_fall Variant
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 0614fb8391028f843a50af73ef8fa369, type: 3}
       propertyPath: m_LocalPosition.x

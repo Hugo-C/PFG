@@ -12,7 +12,17 @@ ModelImporter:
     2300000: tree_short_dark
     3300000: tree_short_dark
     4300000: tree_short_dark
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natureKit-leaves
+    second: {fileID: 2100000, guid: e6677d22096234f4086b96f0b749ae1d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natureKit-wood
+    second: {fileID: 2100000, guid: 8ccbbaa7ae0129b42abd57bd169e23bf, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

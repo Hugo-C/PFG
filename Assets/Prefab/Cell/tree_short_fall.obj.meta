@@ -12,7 +12,17 @@ ModelImporter:
     2300000: tree_short_fall
     3300000: tree_short_fall
     4300000: tree_short_fall
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natureKit-leavesFall
+    second: {fileID: 2100000, guid: 60b00fa6f0afa184485a02377aa82cde, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: natureKit-wood
+    second: {fileID: 2100000, guid: 8ccbbaa7ae0129b42abd57bd169e23bf, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
