@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DefaultNamespace;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Board : MonoBehaviour {
-    
+
+    public GameObject ui;
     public GameObject terrain;
     
     public GameObject emptyCellPrefab;
@@ -27,6 +29,7 @@ public class Board : MonoBehaviour {
     public float secondsBetweenSteps;
 
     private bool isRunning;
+    private MyUi myUi;
     
     private Cell[,] map;
     private GameObject[,] gameObjectMap;
@@ -44,6 +47,8 @@ public class Board : MonoBehaviour {
 
 
         isRunning = true;
+        if(ui != null)
+            myUi = ui.GetComponent<MyUi>();
         StartCoroutine(RunningAutomata());
     }
 
@@ -54,7 +59,8 @@ public class Board : MonoBehaviour {
             if (isRunning) {
                 map = Step();
                 stepCount++;
-                Debug.Log("Step : " + stepCount);
+                if(myUi != null)
+                    myUi.Step = stepCount;
             }
             yield return new WaitForSeconds(secondsBetweenSteps);
         }
