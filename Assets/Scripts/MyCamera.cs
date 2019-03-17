@@ -7,7 +7,7 @@ public class MyCamera : MonoBehaviour {
     [Range(0f, 0.5f)]
     public float canSeeMargin;
     
-    [Range(1f, 100f)]
+    [Range(0f, 100f)]
     public float speed;
 
 

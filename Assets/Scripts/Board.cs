@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DefaultNamespace;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Board : MonoBehaviour {
-    
+
+    public GameObject ui;
+    public float yPlaneElevation;
     public GameObject terrain;
     
     public GameObject emptyCellPrefab;
@@ -27,6 +30,11 @@ public class Board : MonoBehaviour {
     public float secondsBetweenSteps;
 
     private bool isRunning;
+    private MyUi myUi;
+
+    private Transform centerTransform;
+    private List<Transform> cornersTransforms;
+    private Plane gamePlane;
     
     private Cell[,] map;
     private GameObject[,] gameObjectMap;
@@ -35,6 +43,9 @@ public class Board : MonoBehaviour {
         map = new Cell[width, height];
         gameObjectMap = new GameObject[width, height];
         InitTerrain();
+
+        var planeElevation = new Vector3(0, yPlaneElevation, 0);
+        gamePlane = new Plane(planeElevation, planeElevation + Vector3.right, planeElevation + Vector3.forward);
         for (int x = 0; x <= map.GetUpperBound(0); x++) {
             for (int y = 0; y <= map.GetUpperBound(1); y++) {
                 map[x, y] = Cell.Empty;
@@ -44,6 +55,8 @@ public class Board : MonoBehaviour {
 
 
         isRunning = true;
+        if(ui != null)
+            myUi = ui.GetComponent<MyUi>();
         StartCoroutine(RunningAutomata());
     }
 
@@ -54,7 +67,8 @@ public class Board : MonoBehaviour {
             if (isRunning) {
                 map = Step();
                 stepCount++;
-                Debug.Log("Step : " + stepCount);
+                if(myUi != null)
+                    myUi.Step = stepCount;
             }
             yield return new WaitForSeconds(secondsBetweenSteps);
         }
@@ -155,25 +169,46 @@ public class Board : MonoBehaviour {
     }
 
     public Transform GetCenterTransform() {
-        var go = new GameObject("center");
-        go.transform.position = new Vector3(width, 0, height);
-        return go.transform;
+        if (centerTransform == null) {
+            var go = new GameObject("center");
+            go.transform.position = new Vector3(width, 0, height);
+            centerTransform = go.transform;
+        }
+        return centerTransform;
     }
     
     public List<Transform> GetCornersTransforms() {
-        var res = new List<Transform>();
-        var go1 = new GameObject("corner1");
-        go1.transform.position = new Vector3(0, 0, 0);
-        res.Add(go1.transform);
-        var go2 = new GameObject("corner2");
-        go2.transform.position = new Vector3(width * 2, 0, 0);
-        res.Add(go2.transform);
-        var go3 = new GameObject("corner3");
-        go3.transform.position = new Vector3(width * 2, 0, height * 2);
-        res.Add(go3.transform);
-        var go4 = new GameObject("corner4");
-        go4.transform.position = new Vector3(0, 0, height * 2);
-        res.Add(go4.transform);
-        return res;
+        if (cornersTransforms == null) {
+            cornersTransforms = new List<Transform>();
+            var go1 = new GameObject("corner1");
+            go1.transform.position = new Vector3(0, 0, 0);
+            cornersTransforms.Add(go1.transform);
+            var go2 = new GameObject("corner2");
+            go2.transform.position = new Vector3(width * 2, 0, 0);
+            cornersTransforms.Add(go2.transform);
+            var go3 = new GameObject("corner3");
+            go3.transform.position = new Vector3(width * 2, 0, height * 2);
+            cornersTransforms.Add(go3.transform);
+            var go4 = new GameObject("corner4");
+            go4.transform.position = new Vector3(0, 0, height * 2);
+            cornersTransforms.Add(go4.transform);
+        }
+        return cornersTransforms;
+    }
+
+    public bool ManualFire(Ray clickRay) {
+        if (gamePlane.Raycast(clickRay, out var distance)) {
+            var point = clickRay.GetPoint(distance);
+            int x = (int) (point.x / 2);
+            int y = (int) (point.z / 2);
+            if (x >= 0 && x <= map.GetUpperBound(0) && y >= 0 && y <= map.GetUpperBound(1) 
+                && map[x, y] == Cell.Tree) {
+                map[x, y] = Cell.Burning;
+                ChangeGameObject(map, x, y);
+                return true;
+            }
+        }
+        
+        return false;  // we cannot set this point on fire
     }
 }
