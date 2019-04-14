@@ -22,10 +22,9 @@ public class MyCamera : MonoBehaviour {
         cameraComponent = gameObject.GetComponent<Camera>();
     }
 
-    // Update is called once per frame
-    void Update() {
-        transform.LookAt(center);
+    private void LateUpdate() {
         transform.Translate(Vector3.right * Time.deltaTime * speed);
+        transform.LookAt(center);
         bool canSeeItAll = true;
         foreach (var corner in corners) {
             if (!CanSee(corner)) {
