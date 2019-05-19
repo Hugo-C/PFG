@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using DefaultNamespace;
-using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Board : MonoBehaviour {
+
+    // tags used to retrieve prefab from gameObject
+    private const String EmptyCellTag = "undefined";
+    private const String TreeCellTag = "treeCell";
+    private const String BurningCellTag = "burningCell";
 
     public GameObject ui;
     public float yPlaneElevation;
@@ -38,8 +41,17 @@ public class Board : MonoBehaviour {
     
     private Cell[,] map;
     private GameObject[,] gameObjectMap;
+    
+    // ObjectPoolers are used to add / remove gameobjects efficiently
+    private ObjectPooler emptyCellObjectPooler;
+    private ObjectPooler treeCellObjectPooler;
+    private ObjectPooler burningCellObjectPooler;
 
     private void Awake() {
+        emptyCellObjectPooler = new ObjectPooler(emptyCellPrefab);
+        treeCellObjectPooler = new ObjectPooler(treeCellPrefab);
+        burningCellObjectPooler = new ObjectPooler(burningCellPrefab);
+        
         map = new Cell[width, height];
         gameObjectMap = new GameObject[width, height];
         InitTerrain();
@@ -93,29 +105,49 @@ public class Board : MonoBehaviour {
     private void ChangeGameObject(Cell[,] mapToUse, int x, int y) {
         var prevGo = gameObjectMap[x, y];
         if(prevGo != null)
-            Destroy(prevGo);
+            AddGameObjectToObjectPooler(prevGo);
             
-        GameObject prefabToInstantiate;
+        // retrieve a gameobject from the objectPooler
+        ObjectPooler objectPooler; 
         switch (mapToUse[x, y]) {
             case Cell.Tree:
-                prefabToInstantiate = treeCellPrefab;
+                objectPooler = treeCellObjectPooler;
                 break;
             case Cell.Empty:
-                prefabToInstantiate = emptyCellPrefab;
+                objectPooler = emptyCellObjectPooler;
                 break;
             case Cell.Burning:
-                prefabToInstantiate = burningCellPrefab;
+                objectPooler = burningCellObjectPooler;
                 break;
             default:
                 Debug.LogError("unknown cell state");
-                prefabToInstantiate = burningCellPrefab;
+                objectPooler = burningCellObjectPooler;
                 break;
         }
 
-        if (prefabToInstantiate == null)
-            return;
-        var go = Instantiate(prefabToInstantiate, new Vector3(x * 2, 0, y * 2), prefabToInstantiate.transform.rotation);
-        gameObjectMap[x, y] = go;
+        var go = objectPooler.GetObject();
+        if (go != null) {
+            go.transform.position = new Vector3(x * 2, 0, y * 2);
+            gameObjectMap[x, y] = go;   
+        }
+    }
+
+    private void AddGameObjectToObjectPooler(GameObject go) {
+        // add the gameobject to the correct ObjectPooler
+        switch (go.tag) {  
+            case EmptyCellTag:
+                emptyCellObjectPooler.AddObject(go);
+                break;
+            case TreeCellTag:
+                treeCellObjectPooler.AddObject(go);
+                break;
+            case BurningCellTag:
+                burningCellObjectPooler.AddObject(go);
+                break;
+            default:
+                Debug.LogWarning("failed to add gameobject to pool, unknown tag found : " + go.tag);
+                break;
+        }
     }
 
     private Cell[,] Step() {

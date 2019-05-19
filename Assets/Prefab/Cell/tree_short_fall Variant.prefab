@@ -11,6 +11,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: tree_short_fall Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 0614fb8391028f843a50af73ef8fa369, type: 3}
+      propertyPath: m_TagString
+      value: burningCell
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 0614fb8391028f843a50af73ef8fa369, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 0614fb8391028f843a50af73ef8fa369, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 0614fb8391028f843a50af73ef8fa369, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
