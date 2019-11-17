@@ -29,6 +29,9 @@ public class Board : MonoBehaviour {
     [Range(0f, 1f)]
     public float chanceTreeGrowing;
     
+    [Range(0f, 1f)]
+    public float chanceTreeFinishBurning;  // control how long the tree will burn
+    
     [Range(0.01f, 10f)]
     public float secondsBetweenSteps;
 
@@ -157,8 +160,10 @@ public class Board : MonoBehaviour {
                 bool cellChanged = false;
                 switch (map[x, y]) {
                     case Cell.Burning:
-                        result[x, y] = Cell.Empty;
-                        cellChanged = true;
+                        if (Random.Range(0f, 1f) < chanceTreeFinishBurning) {
+                            result[x, y] = Cell.Empty;
+                            cellChanged = true;
+                        }
                         break;
                     case Cell.Tree:
                         if (Random.Range(0f, 1f) < chanceTreeBurning) {
